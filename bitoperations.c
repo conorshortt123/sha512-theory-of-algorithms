@@ -91,14 +91,43 @@ void ROTR(int n, int64_t x)
 {
     // Formula = ROTR^n(x) = (x >> n) | (x << w - n).
 
-    printf("\nROTR function: a logical function used in secure hash algorithms:\n");
+    printf("\nROTR function: a logical function used in secure hash algorithms that rotates bits to the right:\n");
     printf("Given input (x, n) and evaluating with ROTR^n(x) = (x >> n) | (x << w - n)\n");
     printf("Where w is the number of bits in x, and n is the number of rotations\n\n");
 
     // Get ROTR(x)
     for(int i = 0; i <= n; i++)
-    {   
+    {
         int64_t rotr_x = (x >> i) | (x << (sizeof(x) * 8) - i);
+
+        // Print binary of ROTR(x)
+        int j = sizeof(int64_t) * 8;
+        for (j--; j >= 0; j--)
+        {
+            // Picks out the j^th bit of i, evaluates as true if it's a 1 else evaluates as 0.
+            int k = ((1 << j) & rotr_x) ? 1 : 0;
+            // Print k
+            printf("%d", k);
+        }
+        printf("\n");
+    }
+}
+
+// The rotate left (circular left shift) operation, where x is a w-bit word
+// and n is an integer (number of rotations) with 0 <= n < w
+// Referencing: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
+void ROTL(int n, int64_t x)
+{
+    // Formula = ROTL^n(x) = (x << n) | (x >> w - n)
+
+    printf("\nROTL function: a logical function used in secure hash algorithms that rotates bits to the left:\n");
+    printf("Given input (x, n) and evaluating with ROTL^n(x) = (x << n) | (x >> w - n)\n");
+    printf("Where w is the number of bits in x, and n is the number of rotations\n\n");
+
+    // Get ROTR(x)
+    for(int i = 0; i <= n; i++)
+    {
+        int64_t rotr_x = (x << i) | (x >> (sizeof(x) * 8) - i);
 
         // Print binary of ROTR(x)
         int j = sizeof(int64_t) * 8;
@@ -153,6 +182,7 @@ int main(int argc, char *argv[])
     Maj(x, y, z);
 
     ROTR(16, x);
+    ROTL(16, x);
 
     printf("\n");
 
