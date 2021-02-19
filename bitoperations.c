@@ -33,24 +33,53 @@ void Ch(int64_t x, int64_t y, int64_t z)
 
     int64_t ch = (x & y) ^ (~x & z);
 
-    printf("In decimal:\t%" PRId64 "\n", ch);
+    printf("Ch:\nIn decimal:\t%" PRId64 "\n", ch);
     printf("In hexidecimal:\t0x%" PRIX64 "\n", ch);
 
     // Size of 64-bit int
     int j = sizeof(int64_t) * 8;
-
-    // Temp var
-    int k;
 
     printf("In binary:\t");
     // Loop over the number of bits in i (4 * 8)
     for (j--; j >= 0; j--)
     {
         // Picks out the j^th bit of i, evaluates as true if it's a 1 else evaluates as 0.
-        k = ((1 << j) & ch) ? 1 : 0;
+        int k = ((1 << j) & ch) ? 1 : 0;
         // Print k
         printf("%d", k);
     }
+
+    printf("\n");
+}
+
+// Logical function used in Secure Hash Algorithms, where x, y and z and 64-bit integers.
+void Maj(int64_t x, int64_t y, int64_t z) 
+{
+    // Formula = Maj(x, y, z) = (x & y) ^ (x & z) ^ (y & z)
+
+    printf("\nMaj function: a logical function used in secure hash algorithms:\n");
+    printf("Given input (x, y, z) and evaluating with Maj = (x & y) ^ (x & z) ^ (y & z)\n");
+    printf("Where x, y and z are 64-bit numbers and output is also a 64-bit number\n\n");
+
+    int64_t maj = (x & y) ^ (x & z) ^ (y & z);
+
+    printf("Maj:\nIn decimal:\t%" PRId64 "\n", maj);
+    printf("In hexidecimal:\t0x%" PRIX64 "\n", maj);
+
+    // Size of 64-bit int
+    int j = sizeof(int64_t) * 8;
+
+    printf("In binary:\t");
+    // Loop over the number of bits in i (4 * 8)
+    for (j--; j >= 0; j--)
+    {
+        // Picks out the j^th bit of i, evaluates as true if it's a 1 else evaluates as 0.
+        int k = ((1 << j) & maj) ? 1 : 0;
+        // Print k
+        printf("%d", k);
+    }
+
+    printf("\n");
 }
 
 int main(int argc, char *argv[])
@@ -81,11 +110,12 @@ int main(int argc, char *argv[])
     //     printf("\n\n");
     // }
 
-    int64_t x = 0x0000444400004444LL;
-    int64_t y = 0x0000555500005555LL;
-    int64_t z = 0x0000666600006666LL;
+    int64_t x = 0x1234567891011121LL;
+    int64_t y = 0x9586912385591238LL;
+    int64_t z = 0x1293756091714057LL;
 
     Ch(x, y, z);
+    Maj(x, y, z);
     printf("\n");
 
     return 0;
