@@ -20,6 +20,7 @@ void bin_print(unsigned int i)
 }
 
 // Logical function used in Secure Hash Algorithms, where x, y and z and 64-bit integers.
+// Referencing: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
 void Ch(int64_t x, int64_t y, int64_t z)
 {
     // Formula = Ch(x, y, z) = (x & y) ^ (~x & z)
@@ -53,6 +54,7 @@ void Ch(int64_t x, int64_t y, int64_t z)
 }
 
 // Logical function used in Secure Hash Algorithms, where x, y and z and 64-bit integers.
+// Referencing: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
 void Maj(int64_t x, int64_t y, int64_t z) 
 {
     // Formula = Maj(x, y, z) = (x & y) ^ (x & z) ^ (y & z)
