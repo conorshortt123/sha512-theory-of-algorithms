@@ -19,6 +19,24 @@ void bin_print(unsigned int i)
     }
 }
 
+void bin_print_64(int64_t i)
+{
+    // Number of bits in a 64-bit int
+    int j = sizeof(int64_t) * 8;
+
+    // Temp var
+    int k;
+
+    // Loop over the number of bits in i (4 * 8)
+    for (j--; j >= 0; j--)
+    {
+        // Picks out the j^th bit of i, evaluates as true if it's a 1 else evaluates as 0.
+        k = ((1 << j) & i) ? 1 : 0;
+        // Print k
+        printf("%d", k);
+    }
+}
+
 // Logical function used in Secure Hash Algorithms, where x, y and z and 64-bit integers.
 // Referencing: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
 void Ch(int64_t x, int64_t y, int64_t z)
@@ -41,14 +59,9 @@ void Ch(int64_t x, int64_t y, int64_t z)
     int j = sizeof(int64_t) * 8;
 
     printf("In binary:\t");
-    // Loop over the number of bits in i (4 * 8)
-    for (j--; j >= 0; j--)
-    {
-        // Picks out the j^th bit of i, evaluates as true if it's a 1 else evaluates as 0.
-        int k = ((1 << j) & ch) ? 1 : 0;
-        // Print k
-        printf("%d", k);
-    }
+
+    // Print Ch in binary.
+    bin_print_64(ch);
 
     printf("\n");
 }
@@ -72,14 +85,9 @@ void Maj(int64_t x, int64_t y, int64_t z)
     int j = sizeof(int64_t) * 8;
 
     printf("In binary:\t");
-    // Loop over the number of bits in i (4 * 8)
-    for (j--; j >= 0; j--)
-    {
-        // Picks out the j^th bit of i, evaluates as true if it's a 1 else evaluates as 0.
-        int k = ((1 << j) & maj) ? 1 : 0;
-        // Print k
-        printf("%d", k);
-    }
+    
+    // Print Maj in binary.
+    bin_print_64(maj);
 
     printf("\n");
 }
@@ -101,14 +109,8 @@ void ROTR(int n, int64_t x)
         int64_t rotr_x = (x >> i) | (x << (sizeof(x) * 8) - i);
 
         // Print binary of ROTR(x)
-        int j = sizeof(int64_t) * 8;
-        for (j--; j >= 0; j--)
-        {
-            // Picks out the j^th bit of i, evaluates as true if it's a 1 else evaluates as 0.
-            int k = ((1 << j) & rotr_x) ? 1 : 0;
-            // Print k
-            printf("%d", k);
-        }
+        bin_print_64(rotr_x);
+
         printf("\n");
     }
 }
@@ -124,20 +126,14 @@ void ROTL(int n, int64_t x)
     printf("Given input (x, n) and evaluating with ROTL^n(x) = (x << n) | (x >> w - n)\n");
     printf("Where w is the number of bits in x, and n is the number of rotations\n\n");
 
-    // Get ROTR(x)
+    // Get ROTL(x)
     for(int i = 0; i <= n; i++)
     {
-        int64_t rotr_x = (x << i) | (x >> (sizeof(x) * 8) - i);
+        int64_t rotl_x = (x << i) | (x >> (sizeof(x) * 8) - i);
 
-        // Print binary of ROTR(x)
-        int j = sizeof(int64_t) * 8;
-        for (j--; j >= 0; j--)
-        {
-            // Picks out the j^th bit of i, evaluates as true if it's a 1 else evaluates as 0.
-            int k = ((1 << j) & rotr_x) ? 1 : 0;
-            // Print k
-            printf("%d", k);
-        }
+        // Print binary of ROTL(x)
+        bin_print_64(rotl_x);
+
         printf("\n");
     }
 }
@@ -180,7 +176,6 @@ int main(int argc, char *argv[])
 
     Ch(x, y, z);
     Maj(x, y, z);
-
     ROTR(16, x);
     ROTL(16, x);
 
