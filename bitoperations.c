@@ -39,7 +39,7 @@ void bin_print_64(int64_t i)
 
 // Logical function used in Secure Hash Algorithms, where x, y and z and 64-bit integers.
 // Referencing: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
-void Ch(int64_t x, int64_t y, int64_t z)
+int64_t Ch(int64_t x, int64_t y, int64_t z)
 {
     // Formula = Ch(x, y, z) = (x & y) ^ (~x & z)
     // & = Bitwise AND operator
@@ -54,16 +54,8 @@ void Ch(int64_t x, int64_t y, int64_t z)
 
     printf("Ch:\nIn decimal:\t%" PRId64 "\n", ch);
     printf("In hexidecimal:\t0x%" PRIX64 "\n", ch);
-
-    // Size of 64-bit int
-    int j = sizeof(int64_t) * 8;
-
-    printf("In binary:\t");
-
-    // Print Ch in binary.
-    bin_print_64(ch);
-
-    printf("\n");
+    
+    return ch;
 }
 
 // Logical function used in Secure Hash Algorithms, where x, y and z and 64-bit integers.
@@ -83,10 +75,9 @@ void Maj(int64_t x, int64_t y, int64_t z)
 
     // Size of 64-bit int
     int j = sizeof(int64_t) * 8;
-
-    printf("In binary:\t");
     
     // Print Maj in binary.
+    printf("In binary:\t");
     bin_print_64(maj);
 
     printf("\n");
@@ -174,7 +165,11 @@ int main(int argc, char *argv[])
     printf("y = \t0x%" PRIX64 "\n", y);
     printf("z = \t0x%" PRIX64 "\n", z);
 
-    Ch(x, y, z);
+    int64_t ch = Ch(x, y, z);
+    printf("In binary:\t");
+    bin_print_64(ch);
+    printf("\n");
+
     Maj(x, y, z);
     ROTR(16, x);
     ROTL(16, x);
