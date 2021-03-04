@@ -54,7 +54,7 @@ int64_t Ch(int64_t x, int64_t y, int64_t z)
 
     printf("Ch:\nIn decimal:\t%" PRId64 "\n", ch);
     printf("In hexidecimal:\t0x%" PRIX64 "\n", ch);
-    
+
     return ch;
 }
 
@@ -75,7 +75,7 @@ void Maj(int64_t x, int64_t y, int64_t z)
 
     // Size of 64-bit int
     int j = sizeof(int64_t) * 8;
-    
+
     // Print Maj in binary.
     printf("In binary:\t");
     bin_print_64(maj);
@@ -95,7 +95,7 @@ void ROTR(int n, int64_t x)
     printf("Where w is the number of bits in x, and n is the number of rotations\n\n");
 
     // Get ROTR(x)
-    for(int i = 0; i <= n; i++)
+    for (int i = 0; i <= n; i++)
     {
         int64_t rotr_x = (x >> i) | (x << (sizeof(x) * 8) - i);
 
@@ -118,7 +118,7 @@ void ROTL(int n, int64_t x)
     printf("Where w is the number of bits in x, and n is the number of rotations\n\n");
 
     // Get ROTL(x)
-    for(int i = 0; i <= n; i++)
+    for (int i = 0; i <= n; i++)
     {
         int64_t rotl_x = (x << i) | (x >> (sizeof(x) * 8) - i);
 
@@ -131,35 +131,34 @@ void ROTL(int n, int64_t x)
 
 int main(int argc, char *argv[])
 {
-    // // Set i to a literal value, Hex value of 241.
-    // unsigned int i = 0x0f0f0f0f;
+    printf("%s %s %s", argv[1], argv[2], argv[3]);
 
-    // // Print original value in binary.
-    // printf("Original:\t");
-    // bin_print(i);
+    int64_t x;
+    int64_t y;
+    int64_t z;
 
-    // printf("\t%x\t%u\n\n", i, i);
-
-    // // 32
-    // int j = sizeof(unsigned int) * 8;
-
-    // for (j--; j >= 0; j--)
-    // {
-    //     // 1 shifted left j times.
-    //     bin_print(1 << j);
-    //     printf("\n");
-    //     // i.
-    //     bin_print(i);
-    //     printf("\n");
-    //     printf("-------------------------------- &\n");
-    //     // (1 shifted left j times) bitwise logical and i.
-    //     bin_print((1 << j) & i);
-    //     printf("\n\n");
-    // }
-
-    int64_t x = 0x1234F6789C011121LL;
-    int64_t y = 0x9586912385591238LL;
-    int64_t z = 0x1293756091714057LL;
+    if (argc == 4)
+    {
+        x = (int64_t)argv[1];
+        y = (int64_t)argv[2];
+        z = (int64_t)argv[3];
+    }
+    else if (argc > 4)
+    {
+        printf("Too many arguments supplied.\n");
+        return 0;
+    }
+    else if (argc > 1 && argc < 4)
+    {
+        printf("Arguments require 3 64-bit integers: x y z\n");
+        return 0;
+    }
+    else
+    {
+        x = 0x1234F6789C011121LL;
+        y = 0x9586912385591238LL;
+        z = 0x1293756091714057LL;
+    }
 
     printf("\nx = \t0x%" PRIX64 "\n", x);
     printf("y = \t0x%" PRIX64 "\n", y);
