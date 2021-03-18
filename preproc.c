@@ -12,7 +12,7 @@ union Block
 {
     BYTE bytes[64];
     WORD words[16];
-    uint16_t sixf[8];
+    uint64_t sixf[8];
 };
 
 enum Status
@@ -75,7 +75,7 @@ int next_block(FILE *f, union Block *B, enum Status *S, uint64_t *nobits)
     {
         numbytes = 0;
         // Append 0 bits.
-        while (numbytes++ < 64)
+        while (numbytes++ < 56)
         {
             B->bytes[numbytes] = 0x00; // in bits 00000000
         }
@@ -85,7 +85,7 @@ int next_block(FILE *f, union Block *B, enum Status *S, uint64_t *nobits)
         *S = END;
     }
 
-    return 0;
+    return 1;
 }
 
 int main(int argc, char *argv[])
