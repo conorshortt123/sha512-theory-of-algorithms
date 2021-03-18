@@ -12,56 +12,111 @@ union Block
 {
     BYTE bytes[64];
     WORD words[16];
+    uint16_t sixf[8];
 };
+
+enum Status
+{
+    READ,
+    PAD,
+    END
+};
+
+// Get the next block.
+int next_block(FILE *f, union Block *B, enum Status *S, uint64_t *nobits)
+{
+    // Number of bytes to read
+    size_t numbytes;
+
+    if (*S == END)
+    {
+        return 0;
+    }
+    else if (*S == READ)
+    {
+        // Try to read 64 bytes.
+        numbytes = fread(B->bytes, 1, 64, f);
+        // Calculate the total bits read so far.
+        *nobits = *nobits + (8 * numbytes);
+        // Enough room for padding.
+        if (numbytes == 64)
+        {
+            return 1;
+        }
+        else if (numbytes <= 55)
+        {
+            // Append 1 bit (and 7 bits to make a full byte.)
+            B->bytes[numbytes] = 0x80; // in bits 1000000
+            // Append enough 64 bits, leaving 0 at the end.
+            while (numbytes++ < 64)
+            {
+                B->bytes[numbytes] = 0x00; // in bits 00000000
+            }
+            // Append length of original input (Check endianess).
+            B->sixf[7] = *nobits;
+            // Say this is the last block
+            *S = END;
+        }
+        else
+        {
+            // Reached the end of the input message, not enough room in this block
+            // for all the padding. Append a 1 bit and seven 0 bits to make a full byte.
+            B->bytes[numbytes] = 0x80;
+            // Append 0 bits.
+            while (numbytes++ < 64)
+            {
+                B->bytes[numbytes] = 0x00; // in bits 00000000
+            }
+            // Change the status to PAD.
+            *S = PAD;
+        }
+    }
+    else if (*S == PAD)
+    {
+        numbytes = 0;
+        // Append 0 bits.
+        while (numbytes++ < 64)
+        {
+            B->bytes[numbytes] = 0x00; // in bits 00000000
+        }
+        // Append nobits as an integer.
+        B->sixf[7] = *nobits;
+        // Change the status to PAD.
+        *S = END;
+    }
+
+    return 0;
+}
 
 int main(int argc, char *argv[])
 {
-    union Block B;
 
+    union Block B;
     // Total number of bits read
+
     uint64_t nobits = 0;
+
     // Iterator
     int i;
+
+    // Current Status
+    enum Status S = READ;
 
     // File pointer for reading - Project: error checks
     FILE *f;
     // Open from command line for reading - Project: verify args
     f = fopen(argv[1], "rb");
 
-    // Number of bytes to read
-    size_t numbytes;
-
-    // Try to read 64 bytes
-    numbytes = fread(B.bytes, 1, 64, f);
-    // Print to console how many bytes were read.
-    printf("Read %d bytes.\n", numbytes);
-    // Update number of bits read
-    nobits = nobits + (8 * numbytes);
-    // Print the 16 32-bit words.
-    for (i = 0; i < 16; i++)
+    while (next_block(f, &B, &S, &nobits))
     {
-        printf("%08" PF " ", B.words[i]);
-        if ((i + 1) % 8 == 0)
-            printf("\n");
-    }
-
-    while (!feof(f))
-    {
-        numbytes = fread(B.bytes, 1, 64, f);
-        printf("Read %d bytes\n", numbytes);
-        nobits = nobits + (8 * numbytes);
-
-        // Print the 16 32-bit words.
         for (i = 0; i < 16; i++)
         {
             printf("%08" PF " ", B.words[i]);
-            if ((i + 1) % 8 == 0)
-                printf("\n");
         }
+        printf("\n");
     }
     // Close file.
     fclose(f);
-    printf("\n");
     printf("Total bits read is %d\n", nobits);
 
     return 0;
