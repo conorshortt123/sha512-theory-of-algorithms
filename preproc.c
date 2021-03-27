@@ -8,13 +8,18 @@
 #define W 32
 #define BYTE uint8_t
 
+// SHA256 works on blocks of 512 bits.
 union Block
 {
+    // 8 x 64 = 512 - dealing with block as bytes
     BYTE bytes[64];
+    // 32 x 16 = 512 - dealing with block as words
     WORD words[16];
+    // 64 x 8 = 512 - dealing with the last 64 bits of last block.
     uint64_t sixf[8];
 };
 
+// Acts as a flag.
 enum Status
 {
     READ,
@@ -22,7 +27,8 @@ enum Status
     END
 };
 
-// Get the next block.
+// Returns 1 if it created a new block from original message or pdding.
+// Returns 0 if all padded message has already been consumed.
 int next_block(FILE *f, union Block *B, enum Status *S, uint64_t *nobits)
 {
     // Number of bytes to read
@@ -43,13 +49,12 @@ int next_block(FILE *f, union Block *B, enum Status *S, uint64_t *nobits)
         {
             return 1;
         }
-        else if (numbytes <= 55)
+        else if (numbytes < 56)
         {
             // Append 1 bit (and 7 bits to make a full byte.)
             B->bytes[numbytes] = 0x80; // in bits 1000000
             // Append enough 64 bits, leaving 0 at the end.
-            while (numbytes++ < 64)
-            {
+            for (numbytes++; numbytes < 56; numbytes++) {
                 B->bytes[numbytes] = 0x00; // in bits 00000000
             }
             // Append length of original input (Check endianess).
@@ -61,10 +66,10 @@ int next_block(FILE *f, union Block *B, enum Status *S, uint64_t *nobits)
         {
             // Reached the end of the input message, not enough room in this block
             // for all the padding. Append a 1 bit and seven 0 bits to make a full byte.
-            B->bytes[numbytes] = 0x80;
+            B->bytes[numbytes++] = 0x80;
             // Append 0 bits.
-            while (numbytes++ < 64)
-            {
+            for (numbytes++; numbytes < 64; numbytes++) {
+                // Error: this line was trying to write to B->nobytes[64]
                 B->bytes[numbytes] = 0x00; // in bits 00000000
             }
             // Change the status to PAD.
@@ -73,10 +78,8 @@ int next_block(FILE *f, union Block *B, enum Status *S, uint64_t *nobits)
     }
     else if (*S == PAD)
     {
-        numbytes = 0;
         // Append 0 bits.
-        while (numbytes++ < 56)
-        {
+        for (numbytes = 0; numbytes < 56; numbytes++) {
             B->bytes[numbytes] = 0x00; // in bits 00000000
         }
         // Append nobits as an integer.
