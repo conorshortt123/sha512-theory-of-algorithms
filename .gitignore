@@ -3,6 +3,8 @@ bitoperations
 funcs
 preproc
 emptyexec
+sha256
+endian
 
 # Editors
 .vscode
