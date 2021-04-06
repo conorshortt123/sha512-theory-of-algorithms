@@ -5,6 +5,7 @@ preproc
 emptyexec
 sha256
 endian
+sha512
 
 # Editors
 .vscode

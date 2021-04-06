@@ -27,7 +27,6 @@ const int _i = 1;
 #define Sig0(_x) (ROTR(_x,7)  ^ ROTR(_x,18) ^ SHR(_x,3))
 #define Sig1(_x) (ROTR(_x,17) ^ ROTR(_x,19) ^ SHR(_x,10))
 
-
 // SHA256 works on blocks of 512 bits.
 union Block {
     // 8 x 64 = 512 - dealing with block as bytes.
