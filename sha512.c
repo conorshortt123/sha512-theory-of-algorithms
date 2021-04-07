@@ -83,7 +83,7 @@ int next_block(FILE *f, union Block *M, enum Status *S, uint64_t *nobits) {
         // Enough room for padding.
         if (nobytes == 128) {
             // This happens when we can read 64 bytes from f.
-            // Do nothing.
+            return 1;
         } else if (nobytes < 120) {
             // This happens when we have enough roof for all the padding.
             // Append a 1 bit (and seven 0 bits to make a full byte).
@@ -123,7 +123,7 @@ int next_block(FILE *f, union Block *M, enum Status *S, uint64_t *nobits) {
     // Swap the byte order of the words if we're little endian.
     if (islilend())
         for (int i = 0; i < 16; i++)
-            M->words[i] = bswap_32(M->words[i]);
+            M->words[i] = bswap_64(M->words[i]);
 
     return 1;
 }
