@@ -6,6 +6,7 @@ emptyexec
 sha256
 endian
 sha512
+test
 
 # Editors
 .vscode

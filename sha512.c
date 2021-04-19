@@ -32,7 +32,7 @@ union Block {
     BYTE bytes[128];
     // 64 x 16 = 1024 - dealing with block as words.
     WORD words[16];
-    // 64 x 8 = 512 - dealing with the last 64 bits of last block.
+    // 64 x 16 = 1024 - dealing with the last 64 bits of last block.
     uint64_t sixf[16]; // might need to be 16
 };
 
@@ -129,11 +129,6 @@ int next_block(FILE *f, union Block *M, enum Status *S, uint64_t *nobits) {
 }
 
 int next_hash(union Block *M, WORD H[]) {
-    
-    // for (int i = 0; i < 8; i++)
-    // {
-    //     printf("H[%d] = 0x%" PF "\n", i, H[i]);
-    // }
 
     // Message schedule, Section 6.4.2
     WORD W[80];
@@ -167,9 +162,20 @@ int next_hash(union Block *M, WORD H[]) {
 }
 
 
-int sha512(FILE *f, WORD H[]) {
-    // The function that performs/orchestrates the SHA256 algorithm on
-    // message f.
+WORD * sha512(FILE *f) {
+    // The function that performs/orchestrates the SHA256 algorithm on message f.
+    
+    // Section 5.3.5
+    WORD H[] = {
+        0x6a09e667f3bcc908,
+        0xbb67ae8584caa73b,
+        0x3c6ef372fe94f82b,
+        0xa54ff53a5f1d36f1,
+        0x510e527fade682d1,
+        0x9b05688c2b3e6c1f,
+        0x1f83d9abfb41bd6b,
+        0x5be0cd19137e2179
+    };
 
     // The current block.
     union Block M;
@@ -185,21 +191,15 @@ int sha512(FILE *f, WORD H[]) {
         next_hash(&M, H);
     }
 
-    return 0;
+    // Print the final SHA512 hash.
+    for (int i = 0; i < 8; i++)
+        printf("%016" PF, H[i]);
+    printf("\n");
+
+    return H;
 }
 
 int main(int argc, char *argv[]) {
-    // Section 5.3.5
-    WORD H[] = {
-        0x6a09e667f3bcc908,
-        0xbb67ae8584caa73b,
-        0x3c6ef372fe94f82b,
-        0xa54ff53a5f1d36f1,
-        0x510e527fade682d1,
-        0x9b05688c2b3e6c1f,
-        0x1f83d9abfb41bd6b,
-        0x5be0cd19137e2179
-    };
 
     // File pointer for reading.
     FILE *f;
@@ -207,12 +207,7 @@ int main(int argc, char *argv[]) {
     f = fopen(argv[1], "r");
 
     // Calculate the SHA512 of f.
-    sha512(f, H);
-
-    // Print the final SHA512 hash.
-    for (int i = 0; i < 8; i++)
-        printf("%016" PF, H[i]);
-    printf("\n");
+    sha512(f);
 
     // Close the file.
     fclose(f);
