@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <inttypes.h>
+#include <string.h>
 
 // Endianess. Adapted from:
 //   https://developer.ibm.com/technologies/systems/articles/au-endianc/
@@ -162,9 +164,14 @@ int next_hash(union Block *M, WORD H[]) {
 }
 
 
-WORD * sha512(FILE *f) {
+const char * sha512(FILE *f) {
     // The function that performs/orchestrates the SHA256 algorithm on message f.
-    
+
+    // String version of sha512 hash that gets used in tests
+    char *sha512string = malloc (sizeof (char) * 128);
+    // Temp string for each WORD converted
+    char temp[17] = {'\0'}; 
+
     // Section 5.3.5
     WORD H[] = {
         0x6a09e667f3bcc908,
@@ -192,25 +199,15 @@ WORD * sha512(FILE *f) {
     }
 
     // Print the final SHA512 hash.
-    for (int i = 0; i < 8; i++)
-        printf("%016" PF, H[i]);
+    for (int i = 0; i < 8; i++){
+        printf("%016" PF, H[i]); // Prints each WORD in hex
+        
+        sprintf(temp, "%016" PF, H[i]); // Converts long to string
+        strcat(sha512string, temp); // Concatenates temp string onto main string
+        
+    }
+    
     printf("\n");
 
-    return H;
-}
-
-int main(int argc, char *argv[]) {
-
-    // File pointer for reading.
-    FILE *f;
-    // Open file from command line for reading.
-    f = fopen(argv[1], "r");
-
-    // Calculate the SHA512 of f.
-    sha512(f);
-
-    // Close the file.
-    fclose(f);
-
-    return 0;
+    return sha512string;
 }
