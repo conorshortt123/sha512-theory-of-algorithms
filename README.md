@@ -1,6 +1,6 @@
 # Theory of Algorithms - Conor Shortt
 The contents of this repository are for my fourth-year module, *Theory of Algorithms*.
-The task was to write a C program that calculates the [SHA512](https://www.nist.gov/publications/secure-hash-standard) value of any given input file. The program takes in the path of the file as a command line argument and prints out the correct SHA512 digest.
+The task was to write a C program that calculates the [SHA512](https://www.nist.gov/publications/secure-hash-standard) value of any given input file. The program takes in the path of the file as a command line argument, the file contents are then parsed and passed into the [SHA512](https://www.nist.gov/publications/secure-hash-standard) algorithm. The message then goes through pre-processing which involves padding, parsing, and setting initial hash values. The actual hash values are then computed the program then prints out the correct SHA512 digest.
 
 
 ## How to run:
@@ -43,3 +43,10 @@ In short, yes, given enough time (which would be an incomprehensible length of t
 ## How difficult is it to find a hash digest beginning with at least twelve zeros?
 
 This is a very common task for cryptocurrency miners. The goal of crypto mining is to solve a "block", each block has a target hash value with a certain amount of leading zeros depending on the difficulty. The target hash is obtained by manipulating a blocks hash value by adding a "nonce" which is a number used once. The "nonce" is a random value and changes the output of the hash value. The miner's computer will do this millions of times per second until the block is "solved" when a hash value lower than the target value is found. The reason this works is that the miner is awarded a certain amount of bitcoin to compensate for the electricity cost in solving the block, which can be very high depending on hardware. To calculate the probability of finding a hash digest that begins with at least 12 zeros you can use the formula (1/base)^n, where n is the number of zeros required at the start of a hash digest. When plugging in the numbers for hexidecimal digest, (1/16)^12, it evaluates to 3.55 × 10-15. This is an very low probability. To get the average number of hashes needed to find one that will start with 12 zeros, you take the reciprocal of it, so 1/3.55e-15 = 281 trillion average hashes. In terms of how long a computer would take to calculate this many hashes, you need to find the hashrate of a particular computer. My personal computer, which has a fairly powerful graphics card, can get up to 30Mh/s = 30 million hashes per second. This means that my computer would take 9'382'499 seconds, or 108 days. This is a generous hashrate though as most computers wouldn't have a powerful graphics card. A 2014 macbook can do around 100'000 hashes per second, meaning it would take this macbook about 89 years to find this hash. A fair estimate of the cost of running my graphics card at 30Mh/s for 108 days would be about €28. This number was calculated from [here](https://www.cryptocompare.com/mining/calculator/).
+
+### References
+Project Brief; Dr Ian McLoughlin; https://github.com/ianmcloughlin/theory-algos-project
+
+SHA512 Algorithm; FIPS; https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
+
+Formula for Calculating Probability; StackOverflow; https://bitcoin.stackexchange.com/questions/81655/creating-a-hash-that-starts-wtih-9-zeros?fbclid=IwAR23yRwKWfj-iy6oLp62Je_fpHeJqKehCLOswOCZEl5w3rG42KZmuvZxTdg
