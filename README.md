@@ -50,3 +50,9 @@ Project Brief; Dr Ian McLoughlin; https://github.com/ianmcloughlin/theory-algos-
 SHA512 Algorithm; FIPS; https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
 
 Formula for Calculating Probability; StackOverflow; https://bitcoin.stackexchange.com/questions/81655/creating-a-hash-that-starts-wtih-9-zeros?fbclid=IwAR23yRwKWfj-iy6oLp62Je_fpHeJqKehCLOswOCZEl5w3rG42KZmuvZxTdg
+
+Inverse Image (preimage); Wikipedia; https://en.wikipedia.org/wiki/Image_(mathematics)#Inverse_image
+
+Preimage Attack; Wikipedia; https://en.wikipedia.org/wiki/Preimage_attack
+
+How long to brute force a salted hash; Stackoverflow; https://stackoverflow.com/questions/6776050/how-long-to-brute-force-a-salted-sha-512-hash-salt-provided
